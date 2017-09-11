@@ -1,0 +1,5 @@
+# for node_modules
+node_modules/
+
+# editor congif
+.c9/
