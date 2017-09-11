@@ -1,5 +1,5 @@
 # for node_modules
 node_modules/
 
-# editor congif
+# editor config folder
 .c9/
