@@ -47,9 +47,9 @@ function newConnection(socket) {
   socket.on('newUser', function(data, callback) {
     callback(true);
     socket.username = data;
+    io.sockets.emit('clientsNum', clientCount++);
     users.push(socket.username);
     updateUserNames();
-    io.sockets.emit('clientsNum', clientCount++);
   });
   socket.on('userDisconnect', function() {
     updateUserNames();

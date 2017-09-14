@@ -96,16 +96,21 @@
       // when client submits the login form...
       $loginForm.submit(function(e) {
         e.preventDefault();
-        socket.emit('newUser', $username.val(), function(data) {
-          if (data) {
-            $('#loginArea').fadeOut(1000);
-            $loginForm.remove();
-            $loginArea.remove();
-            $(".remove-div").remove();
-            $canvasArea.removeClass('hide');
-            $canvasScreen.show();
-          }
-        });
+        if($username.val() != ""){
+          socket.emit('newUser', $username.val(), function(data) {
+            if (data) {
+              $('#loginArea').fadeOut(1000);
+              $loginForm.remove();
+              $loginArea.remove();
+              $(".remove-div").remove();
+              $canvasArea.removeClass('hide');
+              $canvasScreen.show();
+            }
+          });
+        }
+        else{
+          alert("Please enter an actual username. Remember, everyone will see this name.");
+        }
         $username.val('');
       });
 
