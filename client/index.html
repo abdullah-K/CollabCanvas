@@ -1,134 +1,118 @@
 <!-- /client/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-
-  <!-- SEO PAGE DETAILS  -->
-  <title>CollabCanvas - Abdullah Khan</title>
-  <meta name="author" content="Abdullah Khan">
-  <meta name="description" content="CollabCanvas is an online canvas on which multiple people can draw on together, in real-time. Made by Abdullah Khan.">
-  <link rel="icon" href="./favicon.png">
-
-  <!-- Google Fonts link -->
-  <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500" rel="stylesheet">
-  <!-- CDN links -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.min.js" charset="utf-8"></script>
-  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.min.js" charset="utf-8"></script>-->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-  <!-- Local CSS file -->
-  <link rel="stylesheet" href="styles.css">
-  <!-- Client-side JS -->
-  <script src="./sketch.js" charset="utf-8"></script>
-
-</head>
-
-<body class="hide">
-  <!-- CLIENT LOGIN AREA start  -->
-  <div class="remove-div" style="text-align: center; margin-bottom: -207px; margin-top: 45px;">
-    <h1 class="welcome-h1">
-      CollabCanvas
-    </h1>
-    <p class="responsive-small">
-      CollabCanvas is an online canvas on which multiple people can draw on together and see other people's drawings, in real-time. Just share this page's link with the people you wish to draw with!<br>A project by <a target="_blank" href="http://khanabdullah.com"
-        class="link">Abdullah Khan</a>.
-    </p>
-  </div>
-  <div id="loginArea">
-    <form id="loginForm">
-      <h2 class="text-fade-in">Enter a username:</h2>
-      <!--<textarea class="form-control login" id="username" placeholder="Enter your name here"></textarea>-->
-      <input type="text" id="username" placeholder="Username" class="login textinput" autocomplete="off">
-      <br>
-      <input type="submit" class="btn-submit" value="Enter canvas!">
-    </form>
-  </div>
-  <!-- CLIENT LOGIN AREA end  -->
-
-  <!-- CLIENT CANVAS AREA start  -->
-  <div class="canvasScreen hide canvas-show">
-    <div class="menu-bar unselectable hide canvas-show">
-      <h2 id="clientCount" title="This number may be incorrect..." class="unselectable"> 1 user online</h2>
-      <button onclick="clearCanvas()" id="clearCanvas">clear</button>
-    </div>
-    <nav role="navigation" style="margin-top: 0px;">
-      <div id="menuToggle" style="width: 1px; right: -87; left: 9px; top: 63px;">
-        <input type="checkbox" style="left: 1px;">
-        <span></span>
-        <span></span>
-        <span></span>
-        <ul id="menu" class="users" style="margin-top: -30;left: 41px;top: 84px;padding-top: 40px;">
-          <label>Users online:</label>
-        </ul>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <!-- SEO PAGE DETAILS  -->
+      <title>CollabCanvas - Abdullah Khan</title>
+      <meta name="author" content="Abdullah Khan">
+      <meta name="description" content="CollabCanvas is an online canvas on which multiple people can draw on together, in real-time. Made by Abdullah Khan.">
+      <link rel="icon" href="./favicon.png">
+      <!-- Google Fonts link -->
+      <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500" rel="stylesheet">
+      <!-- CDN links -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/p5.min.js" charset="utf-8"></script>
+      <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.6/addons/p5.dom.min.js" charset="utf-8"></script>-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+      <!-- Local CSS file -->
+      <link rel="stylesheet" href="styles.css">
+      <!-- Client-side JS -->
+      <script src="./sketch.js" charset="utf-8"></script>
+   </head>
+   <body class="hide">
+      <!-- CLIENT LOGIN AREA start  -->
+      <div class="remove-div" style="text-align: center; margin-bottom: -207px; margin-top: 45px;">
+         <h1 class="welcome-h1">
+            CollabCanvas
+         </h1>
+         <p class="responsive-small">
+            CollabCanvas is an online canvas on which multiple people can draw on together and see other people's drawings, in real-time. Just share this page's link with the people you wish to draw with!<br>A project by <a target="_blank" href="http://khanabdullah.com"
+               class="link">Abdullah Khan</a>.
+         </p>
       </div>
-    </nav>
-  </div>
-  <!-- CLIENT CANVAS AREA end  -->
-
-  <!--jQuery-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-  <!-- Client-side username form + username functionality -->
-  <script type="text/javascript">
-    /* global $ */
-    /* global io */
-    $(document).ready(function() {
-      var socket = io({ transports: ['websocket'], upgrade: false });
-      var $loginArea = $('#loginArea');
-      var $loginForm = $('#loginForm');
-      var $username = $('#username');
-      var $users = $('.users');
-      var $canvasArea = $('.canvas-show');
-      var $canvasScreen = $('.canvasScreen');
-      var $clientCount = $('#clientCount');
-
-      $(function() {
-        $('body').fadeIn(2000).removeClass('hide');
-      });
-
-      // when client submits the login form...
-      $loginForm.submit(function(e) {
-        e.preventDefault();
-        if($username.val() != ""){
-          socket.emit('newUser', $username.val(), function(data) {
-            if (data) {
-              $('#loginArea').fadeOut(1000);
-              $loginForm.remove();
-              $loginArea.remove();
-              $(".remove-div").remove();
-              $canvasArea.removeClass('hide');
-              $canvasScreen.show();
-            }
-          });
-        }
-        else{
-          alert("Please enter an actual username. Remember, everyone will see this name.");
-        }
-        $username.val('');
-      });
-
-      socket.on('getUsers', function(data) {
-        var html = '';
-
-        for (var i = 0; i < data.length; i++) {
-          html += '<li class="user-list">' + data[i] + '</li>';
-        }
-        $users.html(html);
-      });
-
-      socket.on('clientsNum', function(clientCount) {
-        $clientCount.text(" " + clientCount + " user(s) online");
-      });
-
-    });
-  </script>
-</body>
-
+      <div id="loginArea">
+         <form id="loginForm">
+            <h2 class="text-fade-in">Enter a username:</h2>
+            <!--<textarea class="form-control login" id="username" placeholder="Enter your name here"></textarea>-->
+            <input type="text" id="username" placeholder="Username" class="login textinput" autocomplete="off">
+            <br>
+            <input type="submit" class="btn-submit" value="Enter canvas!">
+         </form>
+      </div>
+      <!-- CLIENT LOGIN AREA end  -->
+      <!-- CLIENT CANVAS AREA start  -->
+      <div class="canvasScreen hide canvas-show">
+         <div class="menu-bar unselectable hide canvas-show">
+            <h2 id="clientCount" title="This number may be incorrect..." class="unselectable"> 1 user online</h2>
+            <button onclick="clearCanvas()" id="clearCanvas">clear</button>
+         </div>
+         <nav role="navigation" style="margin-top: 0px;">
+            <div id="menuToggle" style="width: 1px; right: -87; left: 9px; top: 63px;">
+               <input type="checkbox" style="left: 1px;">
+               <span></span>
+               <span></span>
+               <span></span>
+               <ul id="menu" class="users" style="margin-top: -30;left: 41px;top: 84px;padding-top: 40px;">
+                  <label>Users online:</label>
+               </ul>
+            </div>
+         </nav>
+      </div>
+      <!-- CLIENT CANVAS AREA end  -->
+      <!--jQuery-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <!-- Client-side username form + username functionality -->
+      <script type="text/javascript">
+         /* global $ */
+         /* global io */
+         $(document).ready(function() {
+           var socket = io({ transports: ['websocket'], upgrade: false });
+           var $loginArea = $('#loginArea');
+           var $loginForm = $('#loginForm');
+           var $username = $('#username');
+           var $users = $('.users');
+           var $canvasArea = $('.canvas-show');
+           var $canvasScreen = $('.canvasScreen');
+           var $clientCount = $('#clientCount');
+           $(function() {
+             $('body').fadeIn(2000).removeClass('hide');
+           });
+           // when client submits the login form...
+           $loginForm.submit(function(e) {
+             e.preventDefault();
+             if($username.val() != ""){
+               socket.emit('newUser', $username.val(), function(data) {
+                 if (data) {
+                   $('#loginArea').fadeOut(1000);
+                   $loginForm.remove();
+                   $loginArea.remove();
+                   $(".remove-div").remove();
+                   $canvasArea.removeClass('hide');
+                   $canvasScreen.show();
+                 }
+               });
+             }
+             else{
+               alert("Please enter an actual username. Remember, everyone will see this name.");
+             }
+             $username.val('');
+           });
+           socket.on('getUsers', function(data) {
+             var html = '';
+         
+             for (var i = 0; i < data.length; i++) {
+               html += '<li class="user-list">' + data[i] + '</li>';
+             }
+             $users.html(html);
+           });
+           socket.on('clientsNum', function(clientCount) {
+             $clientCount.text(" " + clientCount + " user(s) online");
+           });
+         });
+      </script>
+   </body>
 </html>
