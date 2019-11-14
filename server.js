@@ -8,7 +8,7 @@ var socket = require('socket.io');
 //define app as an express.js application
 var app = express();
 //specify server port with 'process.env.PORT'
-var server = app.listen(process.env.PORT);
+var server = app.listen(3030);
 //keeps track of Input/Output
 var io = socket(server);
 //serves files from 'client' folder

@@ -13,7 +13,7 @@ function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   background(35);
 
-  socket = io.connect('https://collab-canvas-project-abdullah-k.c9users.io/');
+  socket = io.connect('http://localhost:3030');
   //Socket event called 'mouse' created + make an anonymous callback function to draw the lines on other client's canvases
   socket.on('mouse',
     function(coordinates) {
